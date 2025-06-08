@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "*.lcprj": "xml",
+    "*.lc": "csharp"
+  }
+}

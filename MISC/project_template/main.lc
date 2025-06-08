@@ -1,0 +1,31 @@
+bool DI1 @ "DI.1";
+bool DI2 @ "DI.2";
+bool DI3 @ "DI.3";
+bool DI4 @ "DI.4";
+
+bool DO1 @ "DO.1";
+bool DO2 @ "DO.2";
+bool DO3 @ "DO.3";
+bool DO4 @ "DO.4";
+
+int a = 10;
+
+int foo(int a)
+{
+  return a + 1;
+}
+
+
+// Установка времени цикла
+void init()
+{
+  a = 20;
+}
+
+// Основной цикл
+void loop()
+{
+    int b;
+    b = foo(a);
+    a = b;
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+  <platform>emu</platform>
+  <source>
+    <file>main.lc</file>
+  </source>
+  <outputdir>out</outputdir>
+</project>

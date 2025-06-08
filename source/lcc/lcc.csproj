@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FE400762-3117-4DB7-BF45-087ACCC66F3F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>LC2.LCCompiler</RootNamespace>
+    <AssemblyName>lccompiler</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr4.Runtime.Standard">
+      <HintPath>dll\Antlr4.Runtime.Standard.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CodeGenerator\AdditionalFields\ForNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\FunctionCallNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\LabelCaseNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\LabelDefaultNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\SwitchNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\TypedNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\VariableDeclaratorNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\DoNode.cs" />
+    <Compile Include="CodeGenerator\AdditionalFields\WhileNode.cs" />
+    <Compile Include="CodeGenerator\AsmInstruction\AsmArithmetiсInstruction.cs" />
+    <Compile Include="CodeGenerator\AsmInstruction\AsmInstruction.cs" />
+    <Compile Include="CodeGenerator\AsmInstruction\AsmInstructionAbstract.cs" />
+    <Compile Include="CodeGenerator\AsmInstruction\AsmInstructionTypeConvert.cs" />
+    <Compile Include="CodeGenerator\AsmInstruction\InstructionBytecode.cs" />
+    <Compile Include="CodeGenerator\AsmInstruction\TranslatorVisitor.cs" />
+    <Compile Include="CodeGenerator\AssemblyUnit.cs" />
+    <Compile Include="CodeGenerator\LabelManager.cs" />
+    <Compile Include="CodeGenerator\GlobalMemoryAllocator.cs" />
+    <Compile Include="CodeGenerator\LCCodeGenerator.cs" />
+    <Compile Include="CodeGenerator\LLOptimizer\LLOptimizer.cs" />
+    <Compile Include="CodeGenerator\LLOptimizer\LLOptimizerConfiguration.cs" />
+    <Compile Include="CodeGenerator\LLOptimizer\LLOptimizer_001.cs" />
+    <Compile Include="CodeGenerator\LLOptimizer\LLOptimizer_002.cs" />
+    <Compile Include="CodeGenerator\LLOptimizer\LLOptimizer_003.cs" />
+    <Compile Include="CodeGenerator\LLOptimizer\LLOptimizer_004.cs" />
+    <Compile Include="CodeGenerator\LocalMemoryAllocator.cs" />
+    <Compile Include="CodeGenerator\Translator.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGenerator.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorAssignOperators.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorElementAccess.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorExpressions.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorFunctionCall.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorHelper.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorIncrDecrOperators.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorIndexer.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorOperatorDo.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorOperatorFor.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorOperatorIf.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorOperators.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorOperatorSwitch.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorOperatorWhile.cs" />
+    <Compile Include="CodeGenerator\VisitorCodeGenerator\VisitorCodeGeneratorTypeCast.cs" />
+    <Compile Include="CompilerProcessor\CompiledUnit.cs" />
+    <Compile Include="CompilerProcessor\CompilerProcessorResult.cs" />
+    <Compile Include="CompilerProcessor\MemoryAllocationInformationSerializer.cs" />
+    <Compile Include="Compiler\ConstantValue\BooleanConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\ByteConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\SByteConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\DoubleConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\FloatConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\IntConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\LongConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\ShortConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\UIntConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\ULongConstantValue.cs" />
+    <Compile Include="Compiler\ConstantValue\UShortConstantValue.cs" />
+    <Compile Include="Compiler\LCTypes\AutoTypeCast.cs" />
+    <Compile Include="Compiler\LCTypes\ConstantTypeCast.cs" />
+    <Compile Include="Compiler\LCTypes\LCArrayType.cs" />
+    <Compile Include="CompilerProcessor\CompilerProcessor.cs" />
+    <Compile Include="CompilerProcessor\LCExecutableFileGenerator.cs" />
+    <Compile Include="CompilerProcessor\SymbolFinder.cs" />
+    <Compile Include="Compiler\LCTypes\LCObjectType.cs" />
+    <Compile Include="Compiler\LCTypes\LCPointerArrayType.cs" />
+    <Compile Include="Compiler\LCTypes\LCPointerStructType.cs" />
+    <Compile Include="Compiler\LCTypes\LCPrimitiveType.cs" />
+    <Compile Include="Compiler\LCTypes\LCStructDeclarator.cs" />
+    <Compile Include="Compiler\LCTypes\LCTypesLocate.cs" />
+    <Compile Include="Compiler\LCTypes\LCTypesUtils.cs" />
+    <Compile Include="Compiler\LCTypes\LCStructType.cs" />
+    <Compile Include="Compiler\SemanticChecks\Actions\ActionExpressionEvaluator.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckArgumentTypeValidationAssign.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckArgumentTypeValidationHelper.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckArgumentTypeValidationReturn.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckArgumentTypeValidationTypeCast.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckBinaryOperation.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckElementAccess.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckIndexer.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckOperator.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckOperatorSwitch.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckUnaryOperation.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckUses.cs" />
+    <Compile Include="Compiler\SemanticChecks\VisitorSemanticCheck\SemanticCheck.cs" />
+    <Compile Include="Compiler\antlr\LCLangBaseVisitor.cs" />
+    <Compile Include="Compiler\antlr\LCLangLexer.cs" />
+    <Compile Include="Compiler\antlr\LCLangParser.cs" />
+    <Compile Include="Compiler\antlr\LCLangVisitor.cs" />
+    <Compile Include="Compiler\SemanticTree\BuildSemanticTree.cs" />
+    <Compile Include="Compiler\SemanticTree\Parsers\BuilderConstantValueNode.cs" />
+    <Compile Include="Compiler\SemanticTree\Parsers\ParserFunctionParamType.cs" />
+    <Compile Include="Compiler\SemanticTree\Parsers\ParserStructDeclaration.cs" />
+    <Compile Include="Compiler\SemanticTree\Parsers\ParserVariableType.cs" />
+    <Compile Include="Compiler\SymbolTable.cs" />
+    <Compile Include="Compiler\ConstantValue\ConstantValue.cs" />
+    <Compile Include="Compiler\IMarkers.cs" />
+    <Compile Include="Compiler\LCTypes\LCTypes.cs" />
+    <Compile Include="Compiler\RunSemanticChecks.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckDeclaratorName.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckDeclarator.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckFunctionCall.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckModuleInit.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\ComplementaryOperatorSearch.cs" />
+    <Compile Include="Compiler\SemanticChecks\Checks\CheckTerminalID.cs" />
+    <Compile Include="Compiler\SemanticChecks\VisitorSemanticCheck\SemanticCheckUnaryOperation.cs" />
+    <Compile Include="Compiler\SemanticChecks\VisitorSemanticCheck\SemanticCheckBinaryOperation.cs" />
+    <Compile Include="Compiler\SemanticChecks\Workers\TreeMISCWorkers.cs" />
+    <Compile Include="Compiler\SemanticTree\Node\SemanticTreeAbstract.cs" />
+    <Compile Include="Compiler\SemanticTree\Node\SemanticTreeBase.cs" />
+    <Compile Include="Compiler\SemanticTree\Node\SemanticTreeOperations.cs" />
+    <Compile Include="Compiler\SemanticTree\Node\SemanticTreeOperators.cs" />
+    <Compile Include="Compiler\SemanticTree\Parsers\ParserConstants.cs" />
+    <Compile Include="Compiler\SemanticTree\Parsers\ParserPrimitiveType.cs" />
+    <Compile Include="Compiler\UseDirectives.cs" />
+    <Compile Include="Compiler\SemanticTree\Visitors\SemanticAutoVisitor.cs" />
+    <Compile Include="Compiler\SemanticTree\Visitors\SemanticVisitor.cs" />
+    <Compile Include="DebugInformationBuilder\DebugInformation.cs" />
+    <Compile Include="DebugInformationBuilder\DebugInformationBuilder.cs" />
+    <Compile Include="DebugInformationBuilder\DebugInformationSerializer.cs" />
+    <Compile Include="GUI\HtmlVisualizer.cs" />
+    <Compile Include="MISC\IOResource.cs" />
+    <Compile Include="ResourceBinder\ResourceBinder.cs" />
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="MISC\InternalCompilerException.cs" />
+    <Compile Include="MISC\CompilerLogger.cs" />
+    <Compile Include="MISC\ILocateElement.cs" />
+    <Compile Include="MISC\LocateElement.cs" />
+    <Compile Include="MISC\PLCConfig.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="CompilerProcessor\LCProject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Compiler\antlr\LCLang.g4" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.ru.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
