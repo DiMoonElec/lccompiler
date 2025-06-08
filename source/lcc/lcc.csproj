@@ -72,7 +72,7 @@
     <Compile Include="CodeGenerator\AdditionalFields\VariableDeclaratorNode.cs" />
     <Compile Include="CodeGenerator\AdditionalFields\DoNode.cs" />
     <Compile Include="CodeGenerator\AdditionalFields\WhileNode.cs" />
-    <Compile Include="CodeGenerator\AsmInstruction\AsmArithmetiсInstruction.cs" />
+    <Compile Include="CodeGenerator\AsmInstruction\AsmArithmeticInstruction.cs" />
     <Compile Include="CodeGenerator\AsmInstruction\AsmInstruction.cs" />
     <Compile Include="CodeGenerator\AsmInstruction\AsmInstructionAbstract.cs" />
     <Compile Include="CodeGenerator\AsmInstruction\AsmInstructionTypeConvert.cs" />
