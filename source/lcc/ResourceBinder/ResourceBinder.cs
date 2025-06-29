@@ -58,8 +58,6 @@ namespace LC2.LCCompiler
         }
       }
 
-      if (result.Count == 0)
-        return null;
       return result.ToArray();
     }
 
