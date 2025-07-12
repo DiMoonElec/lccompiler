@@ -1,0 +1,11 @@
+byte a_byte = 0;
+byte b_byte = 0;
+
+int a_int = 0;
+int b_int = 0;
+
+void loop()
+{
+  a_int = 1 - b_int;
+  a_byte = 1 - b_byte;
+}
