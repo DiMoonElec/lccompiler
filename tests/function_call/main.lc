@@ -1,0 +1,19 @@
+
+int summ(int a, int b)
+{
+  return a + b;
+}
+
+void init()
+{
+}
+
+// Основной цикл
+void loop()
+{
+  int a = 1;
+  int b = 3;
+  int c;
+  c = summ(1, 2);
+  c = summ(a, b);
+}

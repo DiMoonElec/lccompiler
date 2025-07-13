@@ -1,4 +1,6 @@
-﻿namespace LC2.LCCompiler.Compiler.SemanticChecks
+﻿using LC2.LCCompiler.Compiler.LCTypes;
+
+namespace LC2.LCCompiler.Compiler.SemanticChecks
 {
   static class CheckFunctionCall
   {
@@ -73,14 +75,69 @@
 
         if (LCTypesUtils.IsEqual(callParamType, funcParamType) == false)
         {
-          logger.Error(callParam.Locate, string.Format("Тип параметра должен быть '{0}'", funcParamType.ToString()));
-          return false;
+          if ((callParam is ConstantValueNode callParamConstantValueNode) 
+            && (funcParamType is LCPrimitiveType funcParamPrimitiveType))
+          {
+            //Если передаваемым параметром является константное значение
+            //то пытаемся выполнить автоматическое приведение типа
+            if (checkConstant(callParamConstantValueNode, funcParamPrimitiveType, logger) == false)
+            {
+              return false;
+            }
+          }
+          else
+          {
+            logger.Error(callParam.Locate, string.Format("Тип параметра должен быть '{0}'", funcParamType.ToString()));
+            return false;
+          }
         }
 
         return true;
       }
       else
         return false;
+    }
+
+    private static bool checkConstant(ConstantValueNode constantValueNode, 
+      LCPrimitiveType commonType, 
+      CompilerLogger logger)
+    {
+      //Если оба типа совпадают, то выходим
+      if (LCTypesUtils.IsEqual(constantValueNode.Constant.PrimitiveType, commonType))
+        return true;
+
+      ConstantValue castConstant;
+
+      /// Выполняем конвертацию типа константы ///
+      var overrange = ConstantTypeCast.Cast(constantValueNode.Constant, commonType,
+        out castConstant);
+
+      //Если возникло переполнение
+      if (overrange)
+      {
+        logger.Error(constantValueNode.Locate,
+          string.Format("Переполнение константного значения '{0}' при приведении типа из '{1}' в '{2}'",
+          constantValueNode.Constant.ToString(),
+          constantValueNode.Constant.PrimitiveType.ToString(),
+          commonType.ToString()));
+
+        return false;
+      }
+      else
+      {
+        logger.Info(constantValueNode.Locate, string.Format("Константное значение '{0}' преобразовано из типа '{1}' в '{2}'",
+           constantValueNode.Constant.ToString(),
+          constantValueNode.Constant.PrimitiveType.ToString(),
+          commonType.ToString()));
+      }
+
+      /// Создаем ноду константы ///
+      var castConstantValueNode = new ConstantValueNode(castConstant, constantValueNode.Locate);
+
+      /// Выполняем замену ноды ///
+      constantValueNode.Replace(castConstantValueNode);
+
+      return true;
     }
   }
 }

@@ -134,6 +134,19 @@ namespace LC2.LCCompiler.Compiler.SemanticChecks.Checks
         }
       }
 
+      //Так как во время выполнения предыдущих операций 
+      //дерево могло быть перестроено
+      //Берем операнды заново
+      left = op.GetOperandLeft();
+      right = op.GetOperandRight();
+
+      leftObjectType = left.ObjectType;
+      rightObjectType = right.ObjectType;
+
+      leftType = leftObjectType.Type;
+      rightType = rightObjectType.Type;
+
+
       var operatorType = rule.ResultTypeResolver(leftType, rightType);
       if (operatorType == null)
         throw new InternalCompilerException("Семантическое правило вернуло неверный тип");
@@ -210,7 +223,7 @@ namespace LC2.LCCompiler.Compiler.SemanticChecks.Checks
       {
         logger.Info(constantValueNode.Locate, string.Format("Константное значение '{0}' преобразовано из типа '{1}' в '{2}'",
            constantValueNode.Constant.ToString(),
-          constantValueNode.Constant.PrimitiveType.ToString(), 
+          constantValueNode.Constant.PrimitiveType.ToString(),
           commonType.ToString()));
       }
 
@@ -249,7 +262,7 @@ namespace LC2.LCCompiler.Compiler.SemanticChecks.Checks
         return false;
       }
 
-      if(checkConstant(op, leftConstantValueNode, commonType, logger) == false)
+      if (checkConstant(op, leftConstantValueNode, commonType, logger) == false)
         IsOK = false;
 
       if (checkConstant(op, rightConstantValueNode, commonType, logger) == false)

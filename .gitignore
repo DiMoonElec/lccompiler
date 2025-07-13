@@ -3,7 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+tests/**/out/
 installer/Output/
+
 
 # User-specific files
 *.rsuser
