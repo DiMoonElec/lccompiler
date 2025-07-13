@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Antlr4.Runtime;
 using LC2.DebugInfo;
 using LC2.LCCompiler.CodeGenerator;
@@ -15,7 +16,7 @@ namespace LC2.LCCompiler
   internal class CompilerProcessor
   {
 
-    private const string CompilerVersion = "0.1.0";
+    private readonly string CompilerVersion;
 
     /// <summary>
     /// Папка, в которой расположены файлы компилятора
@@ -33,6 +34,19 @@ namespace LC2.LCCompiler
     LCProject project;
     PLCConfig plcconf;
     LLOptimizerConfiguration LLOptimizerConfig = new LLOptimizerConfiguration();
+
+    public CompilerProcessor()
+    {
+      // Получаем сборку, в которой исполняется код
+      var assembly = Assembly.GetExecutingAssembly();
+
+      // Ищем атрибут AssemblyInformationalVersion
+      var infoVersion = assembly
+          .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+          .InformationalVersion;
+
+      CompilerVersion = infoVersion;
+    }
 
     public void Compile()
     {

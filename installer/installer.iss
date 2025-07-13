@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "lccompiler"
-#define MyAppVersion "0.1.1_alpha"
+#define MyAppVersion "0.2.0_alpha"
 #define MyAppPublisher "DiMoon Electronics"
 #define MyAppURL "https://lc2.dimoon.ru/"
 #define MyAppExeName "bin/lccompiler.exe"

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Text;
 
 namespace LC2.LCCompiler
@@ -12,7 +13,7 @@ namespace LC2.LCCompiler
       //Парсинг аргументов командной строки
       if (ParceArgs(args) == false)
       {
-        Console.WriteLine("Формат командной строки: lcc PROJ_FILE.lcprj");
+        PrintHello();
         return -1;
       }
 
@@ -43,7 +44,20 @@ namespace LC2.LCCompiler
       return 0;
     }
 
+    static void PrintHello()
+    {
+      // Получаем сборку, в которой исполняется код
+      var assembly = Assembly.GetExecutingAssembly();
 
+      // Ищем атрибут AssemblyInformationalVersion
+      var infoVersion = assembly
+          .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+          .InformationalVersion;
+
+      Console.WriteLine($"LCCompiler v{infoVersion}");
+      Console.WriteLine();
+      Console.WriteLine("Формат командной строки: lccompiler PROJ_FILE.lcprj");
+    }
     static void PrintLogger(CompilerLogger logger)
     {
       foreach (var s in logger.LoggerElements)
