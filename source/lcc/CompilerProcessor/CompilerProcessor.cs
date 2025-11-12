@@ -62,15 +62,27 @@ namespace LC2.LCCompiler
         throw new CompilationException(string.Format("Ошибка загрузки файла проекта {0}\r\n", ProjectFile));
       }
 
-      //Загружаем конфигурацию ПЛК
+      // Загружаем конфигурацию ПЛК
       try
       {
-        var platformConfigFile = Path.Combine(CompilerDirectory, "platform", project.Platform + ".xml");
-        plcconf = new PLCConfig(platformConfigFile);
+        string configFileName = project.Platform + ".xml";
+        string projectConfigFile = Path.Combine(project.ProjectFileDirectory, configFileName);
+        string platformConfigFile = Path.Combine(CompilerDirectory, "platform", configFileName);
+
+        string configFileToLoad;
+
+        if (File.Exists(projectConfigFile))
+          configFileToLoad = projectConfigFile;
+        else if (File.Exists(platformConfigFile))
+          configFileToLoad = platformConfigFile;
+        else
+          throw new CompilationException($"Файл конфигурации \"{configFileName}\" не найден ни в \"{project.ProjectFileDirectory}\", ни в \"{Path.Combine(CompilerDirectory, "platform")}\".");
+
+        plcconf = new PLCConfig(configFileToLoad);
       }
-      catch
+      catch (Exception ex)
       {
-        throw new CompilationException(string.Format("Ошибка загрузки конфигурации ПЛК \"{0}\"", project.Platform));
+        throw new CompilationException($"Ошибка загрузки конфигурации ПЛК \"{project.Platform}\": {ex.Message}");
       }
 
       //Для всех исходных файлов проектов генерируем
