@@ -68,10 +68,14 @@ namespace LC2.LCCompiler
 
       foreach (var c in resourceClasses)
       {
-        if(c.Alias == alias)
-          foreach(var r in c.Resources)
-            if(r.Name == id)
+        if (c.Alias == alias)
+        {
+          foreach (var r in c.Resources)
+          {
+            if (r.Name == id)
               return r;
+          }
+        }
       }
 
       return null;

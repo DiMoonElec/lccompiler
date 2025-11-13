@@ -210,6 +210,13 @@ namespace LC2.LCCompiler
               resourceClass = new ResourceClassOutputs(alias, resource);
             }
             break;
+
+          case "MODBUSSLAVE":
+            {
+              IOResource[] resource = ParseIO(variableNode);
+              resourceClass = new ResourceClassModbusSlave(alias, resource);
+            }
+            break;
         }
 
         if (resourceClass != null)
@@ -237,6 +244,9 @@ namespace LC2.LCCompiler
 
         switch (typeName)
         {
+          case "void":
+            type = LCPrimitiveType.PrimitiveTypes.LCTypeVoid; 
+            break;
           case "bool":
             type = LCPrimitiveType.PrimitiveTypes.LCTypeBool;
             break;

@@ -30,6 +30,14 @@ namespace LC2.LCCompiler
     }
   }
 
+  internal class ResourceClassModbusSlave : IOResourceClass
+  {
+    public ResourceClassModbusSlave(string alias, IOResource[] resources)
+      : base(alias, resources)
+    {
+    }
+  }
+
   internal class IOResource
   {
     public ushort ID { get; }
