@@ -117,7 +117,8 @@ namespace LC2.LCCompiler
       //Поиск объявлений I/O переменных
       //var IOVariableDeclarations = FindIOVariables(asmb, plcconf.Variables.ToArray());
       var IOVariableDeclarations = ResourceBinder.Binding(asmb.GlobalAllocator.MemoryObjects.ToArray(), 
-        plcconf.Variables.ToArray());
+        plcconf.Variables.ToArray(),
+        Logger);
 
       if (IOVariableDeclarations.Length != 0)
       {

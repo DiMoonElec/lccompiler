@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using LC2.LCCompiler.CodeGenerator;
+using LC2.LCCompiler.Compiler;
 
 namespace LC2.LCCompiler
 {
@@ -34,9 +33,11 @@ namespace LC2.LCCompiler
   }
   internal class ResourceBinder
   {
-    public static PLCVariableDeclaration[] Binding(GlobalMemoryObject[] objects, IOResourceClass[] resourceClasses)
+    public static PLCVariableDeclaration[] Binding(GlobalMemoryObject[] objects,
+      IOResourceClass[] resourceClasses,
+      CompilerLogger logger)
     {
-      List<PLCVariableDeclaration> result = new List<PLCVariableDeclaration>();
+      bool isOK = true;
 
       foreach (var obj in objects)
       {
@@ -48,37 +49,111 @@ namespace LC2.LCCompiler
           {
             foreach (var b in a)
             {
-              IOResource resource = FindIOResource(resourceClasses, b);
-              if (resource == null)
-                throw new Exception("Unknown resource: " + b.ToString());
-
-              result.Add(new PLCVariableDeclaration(resource.ID, obj.Address, b.ToString()));
+              var r = BindingIOResource(obj, b, resourceClasses, logger);
+              if (r == false)
+                isOK = false;
             }
           }
+        }
+      }
+
+      if (isOK == false)
+        throw new CompilationException("PLC variables binding error");
+
+      List<PLCVariableDeclaration> result = new List<PLCVariableDeclaration>();
+
+      foreach (var rc in resourceClasses)
+      {
+        foreach (var a in rc.Resources)
+        {
+          if (a.IsBinded)
+            result.Add(new PLCVariableDeclaration(a.ID, a.Address, a.ToString()));
         }
       }
 
       return result.ToArray();
     }
 
-    private static IOResource FindIOResource(IOResourceClass[] resourceClasses, VariableAttribute a)
+    private static bool BindingIOResource(GlobalMemoryObject memoryObject,
+      VariableAttribute variableAttribute,
+      IOResourceClass[] supportedResources,
+      CompilerLogger logger)
     {
-      string alias = a.Alias;
-      string id = a.ID;
+      string alias = variableAttribute.Alias;
+      string id = variableAttribute.ID;
 
-      foreach (var c in resourceClasses)
+      IOResourceClass resourceClass = null;
+      IOResource resource = null;
+
+      foreach (var rc in supportedResources)
       {
-        if (c.Alias == alias)
+        if (rc.Alias == alias)
         {
-          foreach (var r in c.Resources)
-          {
-            if (r.Name == id)
-              return r;
-          }
+          resourceClass = rc;
+          break;
         }
       }
 
-      return null;
+      if (resourceClass == null)
+      {
+        logger.Error($"Неизвестный тип ресурса '{variableAttribute.ToString()}'");
+        return false;
+      }
+
+      foreach (var r in resourceClass.Resources)
+      {
+        if (r.Name == id)
+        {
+          resource = r;
+          break;
+        }
+      }
+
+      if (resource == null)
+      {
+        logger.Error($"Неизвестный тип ресурса '{variableAttribute.ToString()}'");
+        return false;
+      }
+
+      if (resource.IsBinded)
+      {
+        logger.Error($"К ресурсу '{resourceClass.Alias}.{resource.Name}' уже привязана переменная '{resource.MemoryObject.ObjectName}'");
+        return false;
+      }
+
+      if (resourceClass is ResourceClassInputs resourceClassInputs)
+        return bindingResourceClassInputOutput(resource, memoryObject, variableAttribute, logger);
+      else if (resourceClass is ResourceClassOutputs resourceClassOutputs)
+        return bindingResourceClassInputOutput(resource, memoryObject, variableAttribute, logger);
+      else if (resourceClass is ResourceClassModbusSlave resourceClassModbusSlave)
+        return bindingResourceClassModbusSlave(resource, memoryObject, variableAttribute, logger);
+
+      throw new InternalCompilerException("Unknown resource class");
+    }
+
+    private static bool bindingResourceClassModbusSlave(IOResource resource,
+      GlobalMemoryObject memoryObject,
+      VariableAttribute variableAttribute,
+      CompilerLogger logger)
+    {
+      return false;
+    }
+
+    private static bool bindingResourceClassInputOutput(IOResource resource,
+      GlobalMemoryObject memoryObject,
+      VariableAttribute variableAttribute,
+      CompilerLogger logger)
+    {
+      if (LCTypesUtils.IsEqual(memoryObject.ObjectType.Type, resource.Type))
+      {
+        resource.Bind(memoryObject.Address, memoryObject);
+        return true;
+      }
+      else
+      {
+        logger.Error($"Переменная '{memoryObject.ObjectName}' должна иметь тип '{LCTypesUtils.PrimitiveTypeGetName(resource.Type)}'");
+        return false;
+      }
     }
 
     static VariableAttribute[] AttributesParser(string Attribute)

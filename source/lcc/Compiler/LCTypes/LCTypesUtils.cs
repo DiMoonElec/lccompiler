@@ -32,6 +32,18 @@ namespace LC2.LCCompiler.Compiler
       return false;
     }
 
+    public static bool IsEqual(LCType t1, LCPrimitiveType.PrimitiveTypes t2)
+    {
+      if ((t1 is LCPrimitiveType primitiveType1) && (primitiveType1.Type == t2))
+        return true;
+      return false;
+    }
+
+    public static bool IsEqual(LCPrimitiveType.PrimitiveTypes t1, LCType t2)
+    {
+      return IsEqual(t2, t1);
+    }
+
     /// <summary>
     /// Проверяет, можно ли левому типу присвоить правый
     /// </summary>
