@@ -195,7 +195,7 @@ varableDeclaration
 	;
 
 attributeSpecifier
-    : At StringLiteral
+    : At (TripleStringLiteral | StringLiteral)
     ;
  
 varableDeclarator 
@@ -726,6 +726,11 @@ StringLiteral
 	:   EncodingPrefix? '"' SCharSequence? '"'
 	;
 */
+
+TripleStringLiteral
+	: '"""' ( ~'"' | '"' ~'"' | '""' ~'"' )* '"""'
+	;
+
 
 StringLiteral
 	:   '"' SCharSequence? '"'

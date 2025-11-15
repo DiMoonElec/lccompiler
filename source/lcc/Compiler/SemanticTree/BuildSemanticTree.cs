@@ -241,8 +241,20 @@ namespace LC2.LCCompiler.Compiler.SemanticTree
       if (attributeSpecifier != null)
       {
         var stringLiteral = attributeSpecifier.StringLiteral();
-        var attribute = stringLiteral.GetText().Trim('"');
-        LocateElement attributeLocate = new LocateElement(stringLiteral);
+        var tripleStringLiteral = attributeSpecifier.TripleStringLiteral();
+        string attribute;
+        LocateElement attributeLocate;
+        if (stringLiteral != null)
+        {
+          attribute = stringLiteral.GetText().Trim('"');
+          attributeLocate = new LocateElement(stringLiteral);
+
+        }
+        else
+        {
+          attribute = tripleStringLiteral.GetText().Trim('"');
+          attributeLocate = new LocateElement(tripleStringLiteral);
+        }
 
         declarator.SetAttribute(attribute, attributeLocate);
       }
