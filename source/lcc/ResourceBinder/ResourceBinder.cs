@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using LC2.LCCompiler.CodeGenerator;
 using LC2.LCCompiler.Compiler;
+using static LC2.LCCompiler.Compiler.LCPrimitiveType;
 
 namespace LC2.LCCompiler
 {
@@ -112,7 +113,7 @@ namespace LC2.LCCompiler
     private static bool SingleBinding(LCType variableType, int variableAddress, string variableName,
       IReadOnlyList<ResourceAttribute> resources,
       IOResourceClass[] resourceClasses,
-      LocateElement attributeLocate, 
+      LocateElement attributeLocate,
       CompilerLogger logger)
     {
       bool isOK = true;
@@ -145,6 +146,7 @@ namespace LC2.LCCompiler
 
       IOResourceClass resourceClass = null;
       IOResource resource = null;
+      int resourceIndex = -1;
 
       foreach (var rc in supportedResources)
       {
@@ -161,11 +163,14 @@ namespace LC2.LCCompiler
         return false;
       }
 
-      foreach (var r in resourceClass.Resources)
+      for (int i = 0; i < resourceClass.Resources.Length; i++)
       {
+        var r = resourceClass.Resources[i];
+
         if (r.Name == id)
         {
           resource = r;
+          resourceIndex = i;
           break;
         }
       }
@@ -200,7 +205,7 @@ namespace LC2.LCCompiler
       }
       else if (resourceClass is ResourceClassModbusSlave resourceClassModbusSlave)
       {
-        return bindingResourceClassModbusSlave(resource,
+        return bindingResourceClassModbusSlave(resourceClassModbusSlave, resourceIndex,
           variableType, variableAddress, variableName,
           variableAttribute,
           attributeLocate,
@@ -210,7 +215,8 @@ namespace LC2.LCCompiler
       throw new InternalCompilerException("Unknown resource class");
     }
 
-    private static bool bindingResourceClassModbusSlave(IOResource resource,
+    private static bool bindingResourceClassModbusSlave(ResourceClassModbusSlave resourceClass,
+      int resourceIndex,
       LCType variableType,
       int variableAddress,
       string variableName,
@@ -218,8 +224,75 @@ namespace LC2.LCCompiler
       LocateElement attributeLocate,
       CompilerLogger logger)
     {
-      return false;
+      // Проверка типа переменной — должен быть примитив
+      if (!(variableType is LCPrimitiveType primitiveType))
+      {
+        logger.Error(attributeLocate, $"Переменная '{variableName}' должна иметь примитивный тип данных");
+        return false;
+      }
+
+      int size = primitiveType.Sizeof();
+
+      // Поддерживаем только 2, 4 и 8 байт
+      if (size != 2 && size != 4 && size != 8)
+      {
+        logger.Error(attributeLocate, "В качестве Modbus-переменной данный тип не поддерживается");
+        return false;
+      }
+
+      // Количество modbus-регистров, которые будут использованы (каждый регистр = 2 байта)
+      int registersCount = size / 2;
+
+      // Проверка индекса и выхода за пределы массива регистров
+      if (resourceIndex < 0)
+      {
+        logger.Error(attributeLocate, $"Неверный индекс регистра: {resourceIndex}");
+        return false;
+      }
+
+      if (resourceIndex + registersCount - 1 >= resourceClass.Resources.Length)
+      {
+        logger.Error(attributeLocate,
+            $"Недостаточно регистров в классе '{resourceClass.Alias}' начиная с индекса {resourceIndex} для переменной размера {size} байт");
+        return false;
+      }
+
+      // Сначала проверяем, что все нужные регистры свободны (не привязаны)
+      for (int i = 0; i < registersCount; i++)
+      {
+        var chk = resourceClass.Resources[resourceIndex + i];
+        if (chk.IsBinded)
+        {
+          logger.Error(attributeLocate,
+              $"К ресурсу '{resourceClass.Alias}.{chk.Name}' уже привязана переменная '{chk.Description}'");
+          return false;
+        }
+      }
+
+      // Все регистры свободны — выполняем привязку.
+      // Порядок: от старшего к младшему — старшая часть идет в resourceIndex, младшая в resourceIndex + (registersCount-1)
+      for (int i = 0; i < registersCount; i++)
+      {
+        var targetResource = resourceClass.Resources[resourceIndex + i];
+        // вычисляем смещение в байтах от начала переменной: старшая часть имеет больший смещение
+        int offsetBytes = (registersCount - 1 - i) * 2;
+        int bindAddress = variableAddress + offsetBytes;
+
+        // registersCount — количество регистров (size / 2)
+        // i — текущий индекс 0..registersCount-1, где i==0 — старший регистр
+        string bindName = variableName;
+        if (registersCount > 1)
+        {
+          int postfixIndex = registersCount - 1 - i; // e.g. 4-byte: i=0 -> 1, i=1 -> 0
+          bindName = $"{variableName}_W{postfixIndex}";
+        }
+
+        targetResource.Bind(bindAddress, bindName);
+      }
+
+      return true;
     }
+
 
     private static bool bindingResourceClassInputOutput(IOResource resource,
       LCType variableType,
