@@ -36,7 +36,10 @@ namespace LC2.LCCompiler.CodeGenerator
 
       if (n.ClassValue == ObjectDeclaratorNode.DeclaratorClass.ClassGlobal)
       {
-        assemblyUnit.GlobalAllocator.Declaration(GetGlobalLabelName(n), size, n.Attribute, n.ObjectType);
+        assemblyUnit.GlobalAllocator.Declaration(GetGlobalLabelName(n), 
+          size, 
+          n.Attribute, n.AttributeLocate, 
+          n.ObjectType);
       }
       else if (n.ClassValue == ObjectDeclaratorNode.DeclaratorClass.ClassLocal)
       {

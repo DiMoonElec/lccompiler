@@ -154,7 +154,7 @@ namespace LC2.LCCompiler.Compiler.SemanticTree
         ParserFunctionParamType.Parse(fpTypeContext, out paramType, out paramTypeLocate);
 
         LCObjectType objFuncParam = new LCObjectType(paramType);
-        var funcParam = new VariableDeclaratorNode(objFuncParam, paramName, moduleName, 
+        var funcParam = new VariableDeclaratorNode(objFuncParam, paramName, moduleName,
           new LCTypeLocate(paramTypeLocate), paramNameLocate);
 
         funcParam.ClassValue = ObjectDeclaratorNode.DeclaratorClass.ClassFunctionParam;
@@ -240,8 +240,11 @@ namespace LC2.LCCompiler.Compiler.SemanticTree
 
       if (attributeSpecifier != null)
       {
-        var attribute = attributeSpecifier.StringLiteral().GetText().Trim('"');
-        declarator.Attribute = attribute;
+        var stringLiteral = attributeSpecifier.StringLiteral();
+        var attribute = stringLiteral.GetText().Trim('"');
+        LocateElement attributeLocate = new LocateElement(stringLiteral);
+
+        declarator.SetAttribute(attribute, attributeLocate);
       }
 
       return declarator;

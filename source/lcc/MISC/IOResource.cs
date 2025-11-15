@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using LC2.LCCompiler.CodeGenerator;
-using LC2.LCCompiler.Compiler;
+﻿using LC2.LCCompiler.Compiler;
 
 namespace LC2.LCCompiler
 {
@@ -50,7 +48,7 @@ namespace LC2.LCCompiler
     public LCPrimitiveType.PrimitiveTypes Type { get; }
     public bool IsBinded { get; private set; }
     public int Address { get; private set; }
-    public GlobalMemoryObject MemoryObject { get; private set; }
+    public string Description { get; private set; }
     private IOResourceClass Backlink { get; set; }
 
     public IOResource(ushort id, string name, LCPrimitiveType.PrimitiveTypes type)
@@ -68,12 +66,12 @@ namespace LC2.LCCompiler
       Backlink = backlink;
     }
 
-    public void Bind(int address, GlobalMemoryObject memoryObject)
+    public void Bind(int address, string description)
     {
       if (IsBinded)
         throw new InternalCompilerException("This resource is already binded");
 
-      MemoryObject = memoryObject;
+      Description = description;
       Address = address;
       IsBinded = true;
     }
@@ -81,9 +79,9 @@ namespace LC2.LCCompiler
     public new string ToString()
     {
       if (Backlink == null)
-        return $"{Name} -> {MemoryObject.ObjectName}";
+        return $"{Name} -> {Description} (0x{Address.ToString("X8")})";
 
-      return $"{Backlink.Alias}.{Name} -> {MemoryObject.ObjectName}";
+      return $"{Backlink.Alias}.{Name} -> {Description} (0x{Address.ToString("X8")})";
     }
   }
 

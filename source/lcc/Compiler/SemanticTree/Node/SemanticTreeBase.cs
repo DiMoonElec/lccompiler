@@ -175,12 +175,21 @@ namespace LC2.LCCompiler.Compiler
 
   partial class VariableDeclaratorNode : ObjectDeclaratorNode
   {
-    public string Attribute { get; set; }
+    public string Attribute { get; private set; }
+    public LocateElement AttributeLocate { get; private set; }
+
+
+    public void SetAttribute(string attribute, LocateElement attributeLocate)
+    {
+      Attribute = attribute;
+      AttributeLocate = attributeLocate;
+    }
 
     public VariableDeclaratorNode(LCObjectType objectType, string name, string moduleName,
       LCTypeLocate locateObjectType, LocateElement locateName) : base(objectType, name, moduleName, locateObjectType, locateName)
     {
       Attribute = null;
+      AttributeLocate = null;
     }
 
   }

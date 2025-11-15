@@ -1,6 +1,5 @@
-﻿using LC2.LCCompiler.Compiler;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using LC2.LCCompiler.Compiler;
 
 namespace LC2.LCCompiler.CodeGenerator
 {
@@ -17,21 +16,24 @@ namespace LC2.LCCompiler.CodeGenerator
     /// <param name="name">Имя объявляемого объекта</param>
     /// <param name="objSize">Размер объекта в байтах</param>
     /// <param name="isArray">Является ли объект массивом</param>
-    public void Declaration(string name, int objSize, string attribute, LCObjectType objectType)
+    public void Declaration(string name,
+      int objSize,
+      string attribute, LocateElement attributeLocate,
+      LCObjectType objectType)
     {
       var globalObject = Find(name);
 
       if (globalObject == null) //Если объект не был объявлен ранее
       {
         //Создаем объект до его объявления, параметры объекта будут заполнены позже
-        globalObject = new GlobalMemoryObject(name, objSize, attribute, objectType);
+        globalObject = new GlobalMemoryObject(name, objSize, attribute, attributeLocate, objectType);
 
         //Добавляем объект в список глобальных объектов
         MemoryObjects.Add(globalObject);
       }
       else //Если объект был использован ранее, то заполняем поля объекта
       {
-        globalObject.Fill(objSize, attribute, objectType);
+        globalObject.Fill(objSize, attribute, attributeLocate, objectType);
       }
     }
 
@@ -40,7 +42,12 @@ namespace LC2.LCCompiler.CodeGenerator
       foreach (var m in globalAllocator.MemoryObjects)
       {
         if (m.Filled == true)
-          Declaration(m.ObjectName, m.ObjectSize, m.Attribute, m.ObjectType);
+        {
+          Declaration(m.ObjectName,
+            m.ObjectSize,
+            m.Attribute, m.AttributeLocate,
+            m.ObjectType);
+        }
       }
 
       //MemoryObjects.AddRange(globalAllocator.MemoryObjects);
@@ -193,6 +200,8 @@ namespace LC2.LCCompiler.CodeGenerator
     /// </summary>
     public string Attribute { get; private set; }
 
+    public LocateElement AttributeLocate { get; private set; }
+
     /// <summary>
     /// Адрес объекта. Присваивается в процессе распределения памяти для глобальных объектов
     /// </summary>
@@ -224,9 +233,13 @@ namespace LC2.LCCompiler.CodeGenerator
     /// </summary>
     /// <param name="name">Имя объекта</param>
     /// <param name="size">Размер объекта в байтах</param>
-    public GlobalMemoryObject(string name, int size, string attribute, LCObjectType objectType)
+    public GlobalMemoryObject(string name,
+      int size,
+      string attribute, LocateElement attributeLocate,
+      LCObjectType objectType)
     {
       Attribute = attribute;
+      AttributeLocate = attributeLocate;
       ObjectName = name;
       ObjectSize = size;
       ObjectType = objectType;
@@ -243,15 +256,19 @@ namespace LC2.LCCompiler.CodeGenerator
     {
       ObjectName = name;
       Attribute = null;
+      AttributeLocate = null;
       Filled = false;
       Allocated = false;
     }
 
-    public void Fill(int size, string attribute, LCObjectType objectType)
+    public void Fill(int size,
+      string attribute, LocateElement attributeLocate,
+      LCObjectType objectType)
     {
       ObjectSize = size;
       ObjectType = objectType;
       Attribute = attribute;
+      AttributeLocate = attributeLocate;
       Filled = true;
     }
 
